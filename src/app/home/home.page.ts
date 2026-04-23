@@ -22,8 +22,9 @@ import {
 } from '@ionic/angular/standalone';
 import { Share } from '@capacitor/share';
 import { addIcons } from 'ionicons';
-import { refreshOutline, shareSocialOutline } from 'ionicons/icons';
+import { refreshOutline, saveOutline, shareSocialOutline } from 'ionicons/icons';
 
+import { FirebaseTaskStoreService } from '../services/firebase-task-store.service';
 import { CampusTask, TaskService } from '../services/task.service';
 
 @Component({
@@ -53,16 +54,18 @@ import { CampusTask, TaskService } from '../services/task.service';
 })
 export class HomePage implements OnInit {
   private readonly taskService = inject(TaskService);
+  private readonly firebaseTaskStore = inject(FirebaseTaskStoreService);
 
   userName = 'Paul';
   tasks: CampusTask[] = [];
   isLoading = true;
   errorMessage = '';
-  shareMessage = '';
-  isShareToastOpen = false;
+  toastMessage = '';
+  isToastOpen = false;
+  savingTaskId: number | null = null;
 
   constructor() {
-    addIcons({ refreshOutline, shareSocialOutline });
+    addIcons({ refreshOutline, saveOutline, shareSocialOutline });
   }
 
   get completedCount(): number {
@@ -115,18 +118,32 @@ export class HomePage implements OnInit {
       }
 
       await navigator.clipboard.writeText(task.title);
-      this.showShareMessage('El navegador no permite compartir aqui. Nombre de la tarea copiado.');
+      this.showToastMessage('El navegador no permite compartir aqui. Nombre de la tarea copiado.');
     } catch {
-      this.showShareMessage('No se ha podido abrir el menu de compartir.');
+      this.showToastMessage('No se ha podido abrir el menu de compartir.');
     }
   }
 
-  closeShareToast(): void {
-    this.isShareToastOpen = false;
+  async saveTask(task: CampusTask): Promise<void> {
+    this.savingTaskId = task.id;
+
+    try {
+      await this.firebaseTaskStore.saveTask(task, this.userName);
+      this.showToastMessage('Tarea guardada en Firebase.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se ha podido guardar la tarea.';
+      this.showToastMessage(message);
+    } finally {
+      this.savingTaskId = null;
+    }
   }
 
-  private showShareMessage(message: string): void {
-    this.shareMessage = message;
-    this.isShareToastOpen = true;
+  closeToast(): void {
+    this.isToastOpen = false;
+  }
+
+  private showToastMessage(message: string): void {
+    this.toastMessage = message;
+    this.isToastOpen = true;
   }
 }

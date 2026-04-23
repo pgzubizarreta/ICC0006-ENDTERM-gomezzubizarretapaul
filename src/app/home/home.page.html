@@ -70,6 +70,16 @@
       <ion-button fill="clear" slot="end" aria-label="Compartir tarea" (click)="shareTask(task)">
         <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
       </ion-button>
+      <ion-button
+        fill="clear"
+        slot="end"
+        aria-label="Guardar tarea en Firebase"
+        [disabled]="savingTaskId === task.id"
+        (click)="saveTask(task)"
+      >
+        <ion-spinner *ngIf="savingTaskId === task.id" name="dots"></ion-spinner>
+        <ion-icon *ngIf="savingTaskId !== task.id" slot="icon-only" name="save-outline"></ion-icon>
+      </ion-button>
       <ion-badge slot="end" [color]="task.completed ? 'success' : 'warning'">
         {{ task.completed ? 'Hecha' : 'Pendiente' }}
       </ion-badge>
@@ -77,9 +87,9 @@
   </ion-list>
 
   <ion-toast
-    [isOpen]="isShareToastOpen"
-    [message]="shareMessage"
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
     [duration]="2600"
-    (didDismiss)="closeShareToast()"
+    (didDismiss)="closeToast()"
   ></ion-toast>
 </ion-content>

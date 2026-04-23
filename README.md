@@ -21,6 +21,7 @@ Campus Quest es una aplicacion desarrollada con Ionic + Angular. La app combina 
 - Repositorio Git inicializado y conectado a GitHub.
 - Pantalla principal de tareas conectada a la API publica.
 - Opcion para compartir tareas con el plugin de Capacitor Share.
+- SDK de Firebase instalado y servicio preparado para guardar tareas en Firestore.
 
 ## Tecnologias utilizadas
 

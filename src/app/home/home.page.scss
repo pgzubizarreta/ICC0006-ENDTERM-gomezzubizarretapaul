@@ -90,7 +90,12 @@ ion-item {
 ion-item ion-button {
   width: 44px;
   height: 44px;
-  margin-inline-end: 8px;
+  margin-inline-end: 4px;
+}
+
+ion-item ion-spinner {
+  width: 22px;
+  height: 22px;
 }
 
 ion-label h2 {
