@@ -1,20 +1,75 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Campus Quest</ion-title>
+    <ion-buttons slot="end">
+      <ion-button aria-label="Recargar tareas" (click)="loadTasks()">
+        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Campus Quest</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <ion-refresher slot="fixed" (ionRefresh)="loadTasks($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <section class="hero">
+    <p class="eyebrow">Hola, {{ userName }}</p>
+    <h1>Tus tareas del campus</h1>
+    <p class="intro">
+      Revisa las tareas recuperadas desde la API publica y marca mentalmente tus proximas misiones.
+    </p>
+  </section>
+
+  <section class="stats">
+    <ion-card>
+      <ion-card-content>
+        <span class="stat-number">{{ tasks.length }}</span>
+        <span class="stat-label">Tareas</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-content>
+        <span class="stat-number">{{ pendingCount }}</span>
+        <span class="stat-label">Pendientes</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-content>
+        <span class="stat-number">{{ completedCount }}</span>
+        <span class="stat-label">Completadas</span>
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <div class="state" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando tareas...</p>
   </div>
+
+  <div class="state error" *ngIf="!isLoading && errorMessage">
+    <p>{{ errorMessage }}</p>
+    <ion-button size="small" (click)="loadTasks()">Reintentar</ion-button>
+  </div>
+
+  <ion-list *ngIf="!isLoading && !errorMessage" inset="true">
+    <ion-item *ngFor="let task of tasks; trackBy: trackByTaskId">
+      <ion-label>
+        <h2>{{ task.title }}</h2>
+        <p>Tarea #{{ task.id }}</p>
+      </ion-label>
+      <ion-badge slot="end" [color]="task.completed ? 'success' : 'warning'">
+        {{ task.completed ? 'Hecha' : 'Pendiente' }}
+      </ion-badge>
+    </ion-item>
+  </ion-list>
 </ion-content>
