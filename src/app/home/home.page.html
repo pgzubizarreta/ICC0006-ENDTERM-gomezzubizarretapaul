@@ -67,9 +67,19 @@
         <h2>{{ task.title }}</h2>
         <p>Tarea #{{ task.id }}</p>
       </ion-label>
+      <ion-button fill="clear" slot="end" aria-label="Compartir tarea" (click)="shareTask(task)">
+        <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
+      </ion-button>
       <ion-badge slot="end" [color]="task.completed ? 'success' : 'warning'">
         {{ task.completed ? 'Hecha' : 'Pendiente' }}
       </ion-badge>
     </ion-item>
   </ion-list>
+
+  <ion-toast
+    [isOpen]="isShareToastOpen"
+    [message]="shareMessage"
+    [duration]="2600"
+    (didDismiss)="closeShareToast()"
+  ></ion-toast>
 </ion-content>

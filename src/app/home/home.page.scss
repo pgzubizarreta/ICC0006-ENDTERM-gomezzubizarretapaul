@@ -87,6 +87,12 @@ ion-item {
   --inner-padding-end: 12px;
 }
 
+ion-item ion-button {
+  width: 44px;
+  height: 44px;
+  margin-inline-end: 8px;
+}
+
 ion-label h2 {
   font-size: 15px;
   font-weight: 700;

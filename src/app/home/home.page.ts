@@ -16,11 +16,13 @@ import {
   IonRefresherContent,
   IonSpinner,
   IonTitle,
+  IonToast,
   IonToolbar,
   RefresherCustomEvent,
 } from '@ionic/angular/standalone';
+import { Share } from '@capacitor/share';
 import { addIcons } from 'ionicons';
-import { refreshOutline } from 'ionicons/icons';
+import { refreshOutline, shareSocialOutline } from 'ionicons/icons';
 
 import { CampusTask, TaskService } from '../services/task.service';
 
@@ -45,6 +47,7 @@ import { CampusTask, TaskService } from '../services/task.service';
     IonRefresherContent,
     IonSpinner,
     IonTitle,
+    IonToast,
     IonToolbar,
   ],
 })
@@ -55,9 +58,11 @@ export class HomePage implements OnInit {
   tasks: CampusTask[] = [];
   isLoading = true;
   errorMessage = '';
+  shareMessage = '';
+  isShareToastOpen = false;
 
   constructor() {
-    addIcons({ refreshOutline });
+    addIcons({ refreshOutline, shareSocialOutline });
   }
 
   get completedCount(): number {
@@ -92,5 +97,36 @@ export class HomePage implements OnInit {
 
   trackByTaskId(_index: number, task: CampusTask): number {
     return task.id;
+  }
+
+  async shareTask(task: CampusTask): Promise<void> {
+    const text = `Tarea seleccionada: ${task.title}`;
+
+    try {
+      const canShare = await Share.canShare();
+
+      if (canShare.value) {
+        await Share.share({
+          title: 'Campus Quest',
+          text,
+          dialogTitle: 'Compartir tarea',
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(task.title);
+      this.showShareMessage('El navegador no permite compartir aqui. Nombre de la tarea copiado.');
+    } catch {
+      this.showShareMessage('No se ha podido abrir el menu de compartir.');
+    }
+  }
+
+  closeShareToast(): void {
+    this.isShareToastOpen = false;
+  }
+
+  private showShareMessage(message: string): void {
+    this.shareMessage = message;
+    this.isShareToastOpen = true;
   }
 }
