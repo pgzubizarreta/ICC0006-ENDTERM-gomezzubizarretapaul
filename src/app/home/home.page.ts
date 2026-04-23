@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonBadge,
   IonButton,
@@ -22,7 +23,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Share } from '@capacitor/share';
 import { addIcons } from 'ionicons';
-import { refreshOutline, saveOutline, shareSocialOutline } from 'ionicons/icons';
+import { gameControllerOutline, refreshOutline, saveOutline, shareSocialOutline } from 'ionicons/icons';
 
 import { FirebaseTaskStoreService } from '../services/firebase-task-store.service';
 import { CampusTask, TaskService } from '../services/task.service';
@@ -33,6 +34,7 @@ import { CampusTask, TaskService } from '../services/task.service';
   styleUrls: ['home.page.scss'],
   imports: [
     CommonModule,
+    RouterLink,
     IonBadge,
     IonButton,
     IonButtons,
@@ -65,7 +67,7 @@ export class HomePage implements OnInit {
   savingTaskId: number | null = null;
 
   constructor() {
-    addIcons({ refreshOutline, saveOutline, shareSocialOutline });
+    addIcons({ gameControllerOutline, refreshOutline, saveOutline, shareSocialOutline });
   }
 
   get completedCount(): number {

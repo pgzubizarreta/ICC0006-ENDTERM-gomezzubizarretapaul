@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Tareas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Campus Quest</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Campus Quest</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <section class="game-start" *ngIf="!isGameStarted">
+    <div class="badge-row">
+      <span>
+        <ion-icon name="school-outline"></ion-icon>
+        Alumno: {{ userName }}
+      </span>
+      <span>
+        <ion-icon name="trophy-outline"></ion-icon>
+        Reto academico
+      </span>
+    </div>
+
+    <h1>Recoge entregas y esquiva distracciones</h1>
+    <p>
+      Supera el campus sumando puntos con examenes, proyectos y apuntes. La partida termina al
+      tercer choque con un obstaculo.
+    </p>
+
+    <ion-button size="large" (click)="startGame()">
+      <ion-icon slot="start" name="play-outline"></ion-icon>
+      Jugar
+    </ion-button>
+  </section>
+
+  <section class="game-placeholder" *ngIf="isGameStarted">
+    <p class="eyebrow">Partida iniciada</p>
+    <h2>La pantalla de juego sera el siguiente bloque.</h2>
+    <p>Ahora ya tenemos la navegacion y la pantalla de inicio pedida por el enunciado.</p>
+  </section>
+</ion-content>

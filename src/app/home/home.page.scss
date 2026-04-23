@@ -26,6 +26,10 @@ h1 {
   line-height: 1.45;
 }
 
+.game-link {
+  margin-top: 18px;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
