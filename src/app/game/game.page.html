@@ -14,7 +14,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <section class="game-start" *ngIf="!isGameStarted">
+  <section class="game-start" *ngIf="isStart">
     <div class="badge-row">
       <span>
         <ion-icon name="school-outline"></ion-icon>
@@ -38,9 +38,89 @@
     </ion-button>
   </section>
 
-  <section class="game-placeholder" *ngIf="isGameStarted">
-    <p class="eyebrow">Partida iniciada</p>
-    <h2>La pantalla de juego sera el siguiente bloque.</h2>
-    <p>Ahora ya tenemos la navegacion y la pantalla de inicio pedida por el enunciado.</p>
+  <section class="game-shell" *ngIf="isPlaying || isPaused">
+    <div class="hud">
+      <div>
+        <span class="hud-number">{{ score }}</span>
+        <span class="hud-label">Puntos</span>
+      </div>
+      <div>
+        <span class="hud-number">{{ hits }}/3</span>
+        <span class="hud-label">Choques</span>
+      </div>
+      <div class="hud-actions">
+        <ion-button size="small" *ngIf="isPlaying" (click)="pauseGame()">
+          <ion-icon slot="start" name="pause-outline"></ion-icon>
+          Pausar
+        </ion-button>
+        <ion-button size="small" *ngIf="isPaused" (click)="resumeGame()">
+          <ion-icon slot="start" name="play-outline"></ion-icon>
+          Reanudar
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="restartGame()">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          Reiniciar
+        </ion-button>
+      </div>
+    </div>
+
+    <ion-progress-bar color="danger" [value]="hitsProgress"></ion-progress-bar>
+
+    <div class="board" [class.paused]="isPaused">
+      <div
+        class="entity"
+        *ngFor="let entity of entities"
+        [class.challenge]="entity.type === 'challenge'"
+        [class.obstacle]="entity.type === 'obstacle'"
+        [style.left.%]="entity.x"
+        [style.top.%]="entity.y"
+      >
+        <span>{{ entity.type === 'challenge' ? '+1' : '!' }}</span>
+        <small>{{ entity.label }}</small>
+      </div>
+
+      <div class="player" [style.left.%]="playerX">
+        <ion-icon name="school-outline"></ion-icon>
+        <span>{{ userName }}</span>
+      </div>
+
+      <div class="pause-layer" *ngIf="isPaused">
+        <h2>Pausa</h2>
+        <ion-button (click)="resumeGame()">
+          <ion-icon slot="start" name="play-outline"></ion-icon>
+          Reanudar
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="move-controls">
+      <ion-button aria-label="Mover izquierda" (click)="movePlayer(-1)">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+      <ion-button aria-label="Mover derecha" (click)="movePlayer(1)">
+        <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
   </section>
+
+  <section class="game-over" *ngIf="isGameOver">
+    <p class="eyebrow">Game Over</p>
+    <h1>Puntuacion final: {{ score }}</h1>
+    <p>{{ userName }} ha llegado al tercer choque.</p>
+    <div class="score-save-state" *ngIf="isSavingScore">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Guardando puntuacion...</span>
+    </div>
+    <ion-button size="large" (click)="restartGame()">
+      <ion-icon slot="start" name="refresh-outline"></ion-icon>
+      Reintentar
+    </ion-button>
+  </section>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [duration]="2200"
+    (didDismiss)="closeToast()"
+  ></ion-toast>
 </ion-content>
