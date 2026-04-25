@@ -66,7 +66,7 @@ export class HomePage implements OnInit {
   private readonly firebaseTaskStore = inject(FirebaseTaskStoreService);
   private readonly firebaseScoreService = inject(FirebaseScoreService);
 
-  userName = 'Paul';
+  userName = 'Player 1';
   tasks: CampusTask[] = [];
   topScores: GameScore[] = [];
   isLoading = true;

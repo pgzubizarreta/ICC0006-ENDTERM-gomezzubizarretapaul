@@ -67,7 +67,7 @@ export class GamePage implements OnDestroy {
   private entityId = 0;
   private ticksUntilSpawn = 0;
 
-  userName = 'Paul';
+  userName = 'Player 1';
   gameState: GameState = 'start';
   playerX = 50;
   score = 0;
