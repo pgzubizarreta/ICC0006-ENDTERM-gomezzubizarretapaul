@@ -23,8 +23,15 @@ import {
 } from '@ionic/angular/standalone';
 import { Share } from '@capacitor/share';
 import { addIcons } from 'ionicons';
-import { gameControllerOutline, refreshOutline, saveOutline, shareSocialOutline } from 'ionicons/icons';
+import {
+  gameControllerOutline,
+  refreshOutline,
+  saveOutline,
+  shareSocialOutline,
+  trophyOutline,
+} from 'ionicons/icons';
 
+import { FirebaseScoreService, GameScore } from '../services/firebase-score.service';
 import { FirebaseTaskStoreService } from '../services/firebase-task-store.service';
 import { CampusTask, TaskService } from '../services/task.service';
 
@@ -57,17 +64,20 @@ import { CampusTask, TaskService } from '../services/task.service';
 export class HomePage implements OnInit {
   private readonly taskService = inject(TaskService);
   private readonly firebaseTaskStore = inject(FirebaseTaskStoreService);
+  private readonly firebaseScoreService = inject(FirebaseScoreService);
 
   userName = 'Paul';
   tasks: CampusTask[] = [];
+  topScores: GameScore[] = [];
   isLoading = true;
+  isRankingLoading = true;
   errorMessage = '';
   toastMessage = '';
   isToastOpen = false;
   savingTaskId: number | null = null;
 
   constructor() {
-    addIcons({ gameControllerOutline, refreshOutline, saveOutline, shareSocialOutline });
+    addIcons({ gameControllerOutline, refreshOutline, saveOutline, shareSocialOutline, trophyOutline });
   }
 
   get completedCount(): number {
@@ -80,6 +90,7 @@ export class HomePage implements OnInit {
 
   ngOnInit(): void {
     this.loadTasks();
+    void this.loadTopScores();
   }
 
   loadTasks(event?: RefresherCustomEvent): void {
@@ -91,6 +102,7 @@ export class HomePage implements OnInit {
         this.tasks = tasks.slice(0, 20);
         this.isLoading = false;
         event?.target.complete();
+        void this.loadTopScores();
       },
       error: () => {
         this.errorMessage = 'No se han podido cargar las tareas. Intentalo de nuevo.';
@@ -98,6 +110,16 @@ export class HomePage implements OnInit {
         event?.target.complete();
       },
     });
+  }
+
+  async loadTopScores(): Promise<void> {
+    this.isRankingLoading = true;
+
+    try {
+      this.topScores = await this.firebaseScoreService.getTopScores();
+    } finally {
+      this.isRankingLoading = false;
+    }
   }
 
   trackByTaskId(_index: number, task: CampusTask): number {

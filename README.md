@@ -1,30 +1,16 @@
 # Campus Quest App
 
-Proyecto realizado para la practica M08/0489 ENDTERM.
+Proyecto realizado para la practica M08/0489 ENDTERM con Ionic + Angular.
 
 ## Descripcion
 
-Campus Quest es una aplicacion desarrollada con Ionic + Angular. La app combina una pantalla de tareas con un juego sencillo para incentivar el uso de la aplicacion mediante puntos y ranking.
+Campus Quest combina dos partes dentro de una misma aplicacion:
 
-## Funcionalidades previstas
+- Una pantalla de tareas conectada a la API publica `https://jsonplaceholder.typicode.com/todos`.
+- Un minijuego academico donde el jugador recoge retos para sumar puntos y esquiva obstaculos.
 
-- Recuperar tareas desde la API publica `https://jsonplaceholder.typicode.com/todos`.
-- Separar la logica de datos en servicios inyectables.
-- Mostrar tareas y estado de cada tarea en la interfaz.
-- Configurar Firebase y guardar datos de la aplicacion.
-- Compartir el nombre de una tarea con el plugin nativo de Ionic/Capacitor.
-- Incluir un juego con pantalla de inicio, partida, pausa, reinicio y Game Over.
-
-## Estado actual
-
-- Proyecto Ionic + Angular creado.
-- Repositorio Git inicializado y conectado a GitHub.
-- Pantalla principal de tareas conectada a la API publica.
-- Opcion para compartir tareas con el plugin de Capacitor Share.
-- SDK de Firebase instalado y servicio preparado para guardar tareas en Firestore.
-- Pantalla de inicio del juego con navegacion desde tareas.
-- Juego con puntuacion, obstaculos, pausa, reinicio y pantalla de Game Over.
-- Guardado de puntuaciones finales del juego en Firebase.
+La aplicacion integra Firebase para guardar tareas y puntuaciones finales del juego, y muestra un
+ranking en la pantalla principal.
 
 ## Tecnologias utilizadas
 
@@ -33,8 +19,71 @@ Campus Quest es una aplicacion desarrollada con Ionic + Angular. La app combina 
 - TypeScript
 - SCSS
 - Capacitor
+- Firebase / Cloud Firestore
 - Git y GitHub
-- Firebase
+
+## Funcionalidades implementadas
+
+- Carga de tareas desde API publica.
+- Servicio inyectable para separar la logica de datos.
+- Pantalla principal con listado de tareas, resumen y refresco.
+- Compartir tarea con `@capacitor/share`.
+- Guardado de tareas en Firestore.
+- Pantalla inicial del juego.
+- Pantalla de juego con movimiento, puntuacion y colisiones.
+- Pausa, reanudacion y reinicio de partida.
+- Pantalla de Game Over.
+- Guardado de puntuaciones finales en Firestore.
+- Ranking visible en la app con las mejores puntuaciones.
+
+## Checklist del enunciado
+
+### Git y documentacion
+
+- [x] Repositorio remoto en GitHub
+- [x] Commits frecuentes y descriptivos
+- [x] README.md completo y descriptivo
+
+### Apartado 1 - Campus Quest App
+
+- [x] Implementar pantallas y componentes planteados
+- [x] Navegacion entre pantallas
+- [x] Recuperar datos de la API publica de tareas
+- [x] Utilizar servicios inyectables para separar la logica de la API
+- [x] Configurar Firebase en la app
+- [x] Implementar Firebase para almacenar datos
+- [x] Configurar plugin de compartir de Ionic para enviar el nombre de la tarea
+
+### Apartado 2 - Juego
+
+- [x] Pantalla de inicio con boton para empezar la partida
+- [x] Pantalla del juego
+- [x] Pantalla de Game Over
+- [x] Logica de movimiento
+- [x] Logica de generacion de obstaculos y retos
+- [x] Puntuacion visible durante la partida
+- [x] Logica de reinicio, pausado y reanudacion
+- [x] Fin de partida al tercer choque
+- [x] Integracion del juego dentro de la app
+
+## Estructura principal
+
+```text
+src/app/
+  home/
+  game/
+  services/
+    task.service.ts
+    firebase-task-store.service.ts
+    firebase-score.service.ts
+```
+
+## Firebase
+
+La app utiliza dos colecciones en Cloud Firestore:
+
+- `savedTasks`: tareas guardadas desde la pantalla principal.
+- `gameScores`: puntuaciones finales guardadas desde Game Over.
 
 ## Ejecucion del proyecto
 
@@ -42,3 +91,8 @@ Campus Quest es una aplicacion desarrollada con Ionic + Angular. La app combina 
 npm install
 ionic serve
 ```
+
+## Estado final
+
+Proyecto funcional con tareas, Firebase, compartir, juego y ranking integrados dentro de una misma
+aplicacion.

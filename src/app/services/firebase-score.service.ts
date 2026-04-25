@@ -1,8 +1,24 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import { addDoc, collection, Firestore, getFirestore, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  Firestore,
+  getDocs,
+  getFirestore,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore';
 
 import { environment } from '../../environments/environment';
+
+export interface GameScore {
+  userName: string;
+  score: number;
+  hits: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +51,29 @@ export class FirebaseScoreService {
       score,
       hits,
       savedAt: serverTimestamp(),
+    });
+  }
+
+  async getTopScores(maxResults = 5): Promise<GameScore[]> {
+    if (!this.isConfigured) {
+      return [];
+    }
+
+    const scoresQuery = query(
+      collection(this.getDatabase(), this.collectionName),
+      orderBy('score', 'desc'),
+      limit(maxResults),
+    );
+    const snapshot = await getDocs(scoresQuery);
+
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+
+      return {
+        userName: String(data['userName'] ?? 'Alumno'),
+        score: Number(data['score'] ?? 0),
+        hits: Number(data['hits'] ?? 0),
+      };
     });
   }
 

@@ -55,6 +55,34 @@
     </ion-card>
   </section>
 
+  <section class="ranking" *ngIf="!isLoading && !errorMessage">
+    <div class="ranking-header">
+      <div>
+        <p class="eyebrow">Ranking</p>
+        <h2>Mejores puntuaciones</h2>
+      </div>
+      <ion-icon name="trophy-outline"></ion-icon>
+    </div>
+
+    <div class="ranking-state" *ngIf="isRankingLoading">
+      <ion-spinner name="dots"></ion-spinner>
+    </div>
+
+    <ion-list *ngIf="!isRankingLoading && topScores.length" inset="true">
+      <ion-item *ngFor="let score of topScores; let index = index">
+        <ion-label>
+          <h2>#{{ index + 1 }} {{ score.userName }}</h2>
+          <p>{{ score.hits }}/3 choques</p>
+        </ion-label>
+        <ion-badge slot="end" color="primary">{{ score.score }} pts</ion-badge>
+      </ion-item>
+    </ion-list>
+
+    <div class="ranking-empty" *ngIf="!isRankingLoading && !topScores.length">
+      <p>Juega una partida para generar el primer marcador.</p>
+    </div>
+  </section>
+
   <div class="state" *ngIf="isLoading">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando tareas...</p>
